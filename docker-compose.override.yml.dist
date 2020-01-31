@@ -1,0 +1,69 @@
+version: '3'
+services:
+  php:
+    dns:
+    - 8.8.8.8
+    - 8.8.4.4
+    build:
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./docker/php/php-fpm.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      # - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    networks:
+      app:
+  web:
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      app:
+        ipv4_address: 172.21.0.3
+  mysql:
+    volumes:
+      - mysql_storage:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my-custom.cnf
+    networks:
+      app:
+        ipv4_address: 172.21.0.5
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+  node:
+    image: node:10
+    volumes:
+      - ./php:/var/www
+    working_dir: /var/www
+    user: node
+    command: bash -c 'yarn && yarn run watch'
+    networks:
+      app:
+        ipv4_address: 172.21.0.7
+  elastic:
+      environment:
+        ES_HEAP_SIZE: "2g"
+        LS_HEAP_SIZE: "1g"
+      networks:
+        app:
+          ipv4_address: 172.21.0.9
+  redis:
+    image: redis:latest
+    networks:
+      app:
+        ipv4_address: 172.21.0.11
+  socket:
+    networks:
+      app:
+        ipv4_address: 172.21.0.12
+    volumes:
+      - "./php:/usr/src/app"
+volumes:
+  mysql_storage:
+
+networks:
+  app:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

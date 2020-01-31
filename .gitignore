@@ -1,0 +1,4 @@
+/docker-compose.override.yml
+/php/vendor/
+.idea
+/php/node_modules
