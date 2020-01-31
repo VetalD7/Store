@@ -69,6 +69,5 @@ class UserLoginService implements UserLoginContract
         }
 
         return Response::json(['authenticated' => false]);
-
     }
 }
