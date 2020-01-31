@@ -12,6 +12,7 @@
 */
 
 Route::post('/auth/login', 'Auth\LoginController@login')->name('login');
+Route::get('/auth/check', 'Auth\LoginController@check')->name('check');
 Route::post('/auth/password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
 Route::post('/auth/password/forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.forgot');
 

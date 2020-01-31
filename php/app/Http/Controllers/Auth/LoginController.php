@@ -64,4 +64,12 @@ class LoginController extends Controller
     {
         return $this->service->logout();
     }
+
+    /**
+     * @return mixed
+     */
+    public function check()
+    {
+        return $this->service->check();
+    }
 }

@@ -58,4 +58,17 @@ class UserLoginService implements UserLoginContract
             return Response::json(['error' => trans('auth.logout_error')], 400);
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function check()
+    {
+        if (Auth::check()) {
+            return Response::json(['authenticated' => true]);
+        }
+
+        return Response::json(['authenticated' => false]);
+
+    }
 }
