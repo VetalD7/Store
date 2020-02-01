@@ -3,7 +3,7 @@ import Ls from './ls'
 export default {
   async login (loginData) {
     try {
-      let response = await axios.post('/api/auth/login', loginData)
+      let response = await axios.post('/auth/login', loginData)
 
       Ls.set('auth.token', response.data.token)
       toastr['success']('Logged In!', 'Success')
@@ -20,7 +20,7 @@ export default {
 
   async logout () {
     try {
-      await axios.get('/api/auth/logout')
+      await axios.get('/auth/logout')
 
       Ls.remove('auth.token')
       toastr['success']('Logged out!', 'Success')
@@ -30,7 +30,7 @@ export default {
   },
 
   async check () {
-    let response = await axios.get('/api/auth/check')
+    let response = await axios.get('/auth/check')
 
     return !!response.data.authenticated
   }

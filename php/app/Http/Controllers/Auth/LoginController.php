@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\UserLoginContract;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Requests\Backend\LoginValidatorRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -20,6 +22,10 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    /**
+     * @var
+     */
+    protected $service;
 
     /**
      * Where to redirect users after login.
@@ -33,8 +39,37 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    /**
+     * LoginController constructor.
+     * @param UserLoginContract $service
+     */
+    public function __construct(UserLoginContract $service)
     {
-        $this->middleware('guest')->except('logout');
+        $this->service = $service;
+    }
+
+    /**
+     * @param LoginValidatorRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(LoginValidatorRequest $request)
+    {
+        return $this->service->login($request);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        return $this->service->logout();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function check()
+    {
+        return $this->service->check();
     }
 }
